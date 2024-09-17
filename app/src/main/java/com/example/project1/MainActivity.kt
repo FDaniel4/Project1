@@ -119,7 +119,7 @@ class MainActivity : ComponentActivity() {
 //            }
 //test
 
-//            Projecto1Theme {
+//            Project1Theme {
 //                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 //                    Greeting(
 //                        name = "Android",
@@ -142,8 +142,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 //@Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    Projecto1Theme {
-        Greeting("Sebastián")
+    Project1Theme {
+        Greeting("Daniel")
     }
 }
 
@@ -225,7 +225,7 @@ fun Picture() {
         Image(
             modifier = Modifier
                 .fillMaxWidth(),
-            painter = painterResource(R.drawable.andcat),
+            painter = painterResource(R.drawable.logo),
             contentDescription = "Logo Andorid",
             contentScale = ContentScale.Crop
         )
@@ -250,8 +250,8 @@ fun Content1() {
         )
         Image(
             modifier = Modifier.fillMaxWidth(),
-            painter = painterResource(id = R.drawable.andcat),
-            contentDescription = "ANDCAT LOGO",
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "ANDROID LOGO",
             contentScale = ContentScale.Crop
         )
         Text(
@@ -283,8 +283,8 @@ fun Content2() {
                         .width(200.dp)
                         .padding(0.dp, 10.dp),
 
-                    painter = painterResource(id = R.drawable.andcat),
-                    contentDescription = "ANDCAT LOGO",
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "ANDROID LOGO",
                     contentScale = ContentScale.Fit
                 )
             }
@@ -320,8 +320,8 @@ fun BoxExample1(){
             .padding(5.dp)
     ){
         Image(
-            painter = painterResource(id = R.drawable.andcat),
-            contentDescription = "ANDCAT",
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "ANDROID",
             contentScale = ContentScale.FillBounds
         )
         Row (
