@@ -97,6 +97,7 @@ class MainActivity : ComponentActivity() {
 //                Content1()
 //            }
 
+//para hacer push
 
             //layouts
 //            Column {
