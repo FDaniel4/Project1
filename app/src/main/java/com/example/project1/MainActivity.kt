@@ -22,6 +22,8 @@ class MainActivity : ComponentActivity() {
 //        enableEdgeToEdge()
         setContent {
             ComposeMultiScreenApp()
+            ComponentScreen(navController = rememberNavController())
+
 
 //            Column(
 //                modifier = Modifier
