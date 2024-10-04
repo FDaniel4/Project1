@@ -1,10 +1,20 @@
 package com.example.project1.ui.screens
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.widget.Button
+import android.widget.DatePicker
+import android.widget.TimePicker
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -13,9 +23,16 @@ import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -37,6 +54,8 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -51,10 +70,15 @@ import androidx.navigation.NavController
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import org.w3c.dom.Text
+import java.util.Calendar
 
 
 @Composable
@@ -110,7 +134,7 @@ fun ComponentScreen(navController: NavController) {
                     label = { Text(text = "Floating Buttons") },
                     selected = false,
                     onClick = {
-                        component = "Floating Buttons"
+                        component = "FloatingButtons"
                         scope.launch {
                             drawerSate.apply {
                                 close()
@@ -136,7 +160,7 @@ fun ComponentScreen(navController: NavController) {
                     label = { Text(text = "Progress") },
                     selected = false,
                     onClick = {
-                        component = "Content "
+                        component = "Progress"
                         scope.launch {
                             drawerSate.apply {
                                 close()
@@ -169,6 +193,84 @@ fun ComponentScreen(navController: NavController) {
                         }
                     }
                 )
+
+                NavigationDrawerItem(
+                    label = { Text(text = "Badges") },
+                    selected = false,
+                    onClick = {
+                        component = "Badges"
+                        scope.launch {
+                            drawerSate.apply {
+                                close()
+                            }
+                        }
+                    }
+                )
+
+                NavigationDrawerItem(
+                    label = { Text(text = "DatePickers") },
+                    selected = false,
+                    onClick = {
+                        component = "date-pickers"
+                        scope.launch {
+                            drawerSate.apply {
+                                close()
+                            }
+                        }
+                    }
+                )
+
+                NavigationDrawerItem(
+                    label = { Text(text = "Badges") },
+                    selected = false,
+                    onClick = {
+                        component = "Badges"
+                        scope.launch {
+                            drawerSate.apply {
+                                close()
+                            }
+                        }
+                    }
+                )
+
+                NavigationDrawerItem(
+                    label = { Text(text = "Snack Bar") },
+                    selected = false,
+                    onClick = {
+                        component = "snack-bar"
+                        scope.launch {
+                            drawerSate.apply {
+                                close()
+                            }
+                        }
+                    }
+                )
+
+                NavigationDrawerItem(
+                    label = { Text(text = "Alert Dialogs") },
+                    selected = false,
+                    onClick = {
+                        component = "alert-dialogs"
+                        scope.launch {
+                            drawerSate.apply {
+                                close()
+                            }
+                        }
+                    }
+                )
+
+                NavigationDrawerItem(
+                    label = { Text(text = "Bars") },
+                    selected = false,
+                    onClick = {
+                        component = "bars"
+                        scope.launch {
+                            drawerSate.apply {
+                                close()
+                            }
+                        }
+                    }
+                )
             }
         }
     ) {
@@ -184,6 +286,12 @@ fun ComponentScreen(navController: NavController) {
             "Progress" -> Progress()
             "Sliders" -> Sliders()
             "Switches" -> Switches()
+            "Badges" -> Badges()
+//            "date-pickers" -> DatePickers()
+//            "time-pickers" -> TimePickers()
+            "snack-bar" -> SnackBars()
+            "alert-dialogs" -> AlertDialogs()
+            "bars" -> Bars()
             //rutas para las demás pantallas
         }
     }
@@ -410,4 +518,211 @@ fun Switches() {
             }
         )
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun Badges(){
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        var itemCount by remember { mutableStateOf(0) }
+        BadgedBox(
+            badge = {
+                if (itemCount > 0) {
+                    Badge(
+                        containerColor = Color.Red,
+                        contentColor = Color.White
+                    ) {
+                        Text(text = "$itemCount")
+                    }
+                }
+            }
+                ){
+            Icon(imageVector = Icons.Filled.ShoppingCart,
+                contentDescription = ""
+            )
+
+            }
+        Button(
+            onClick = { itemCount++ })
+        {
+            Text(text = "Add item")
+
+        }
+
+
+        }
+}
+
+//@Preview(showBackground = true)
+//@Composable
+//fun DatePickers() {
+//    var showTimePicker by remember { mutableStateOf(false) }
+//    val state = rememberTimePickerState()
+//    val formatter = remember { SimpleDateFormat("hh:mm a", Locale.getDefault()) }
+//    val snackState = remember { SnackbarHostState() }
+//    val snackScope = rememberCoroutineScope()
+//
+//    Box(propagateMinConstraints = false) {
+//        Button(modifier = Modifier.align(Alignment.Center), onClick = { showTimePicker = true }) {
+//            Text("Set Time")
+//        }
+//        SnackbarHost(hostState = snackState)
+//    }
+//
+//    if (showTimePicker) {
+//        TimePickerDialog(
+//            onCancel = { showTimePicker = false },
+//            onConfirm = {
+//                val cal = Calendar.getInstance()
+//                cal.set(Calendar.HOUR_OF_DAY, state.hour)
+//                cal.set(Calendar.MINUTE, state.minute)
+//                cal.isLenient = false
+//                snackScope.launch {
+//                    snackState.showSnackbar("Entered time: ${formatter.format(cal.time)}")
+//                }
+//                showTimePicker = false
+//            },
+//        ) {
+//            TimeInput(state = state)
+//        }
+//    }
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun TimePickers() {
+//    var selectedTime by remember { mutableStateOf("") }
+//
+//    val calendar = Calendar.getInstance()
+//    val hour = calendar.get(Calendar.HOUR_OF_DAY)
+//    val minute = calendar.get(Calendar.MINUTE)
+//
+//    // TimePickerDialog creation
+//    val timePickerDialog = TimePickerDialog(
+//        LocalContext.current,
+//        { _: TimePicker, selectedHour: Int, selectedMinute: Int ->
+//            selectedTime = "$selectedHour:${if (selectedMinute < 10) "0$selectedMinute" else selectedMinute}"
+//        }, hour, minute, true
+//    )
+//
+//    Column(
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Center,
+//        modifier = Modifier.fillMaxSize().padding(16.dp)
+//    ) {
+//        Text(text = "Selected Time: $selectedTime")
+//
+//        Spacer(modifier = Modifier.height(16.dp))
+//
+//        Button(onClick = {
+//            timePickerDialog.show()
+//        }) {
+//            Text(text = "Select Time")
+//        }
+//    }
+//}
+
+@Preview(showBackground = true)
+@Composable
+fun SnackBars(){
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier.fillMaxSize()
+    ){
+        val snackSate = remember { SnackbarHostState() }
+        val snackScope = rememberCoroutineScope()
+
+        SnackbarHost(hostState = snackSate, Modifier)
+
+        fun launchSnackBar(){
+            snackScope.launch {
+                snackSate.showSnackbar("The message was sent")
+            }
+        }
+
+        Button(onClick = { launchSnackBar() }) {
+            Text(text = "Show SnackBar")
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AlertDialogs() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        var showAlertDialog by remember { mutableStateOf(false) }
+        var selectedOption by remember { mutableStateOf("") }
+
+        if (showAlertDialog) {
+            AlertDialog(
+                icon = { Icon(Icons.Filled.Warning, contentDescription = "") },
+                title = { Text(text = "Confirm deletion") },
+                text = { Text(text = "Are you sure you want to delete this item?") },
+                onDismissRequest = { },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            selectedOption = "Confirm"
+                            showAlertDialog = false
+                        }
+                    ){Text(text = "Confirm")}
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            selectedOption = "Dismiss"
+                            showAlertDialog = false
+                        }
+                    ){Text(text = "Dismiss")}
+                }
+            )
+
+        }
+        Text(selectedOption)
+        Button(onClick = { showAlertDialog = true }) {
+            Text(text = "Show AlertDialog")
+        }
+
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun Bars(){
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.Blue)
+    ){
+        Row(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .background(Color.Black)
+                .padding(10.dp, 50.dp, 10.dp, 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+            )
+        {
+            Icon(Icons.Filled.Menu, contentDescription = "", tint = Color.White)
+            Text(
+                text = "App title",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(10.dp)
+
+                )
+            Icon(Icons.Filled.Settings, contentDescription = "", tint = Color.White)
+
+        }
+
+    }
+
 }
