@@ -19,6 +19,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -76,11 +80,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import com.example.project1.R
 import com.example.project1.data.model.MenuModel
+import com.example.project1.data.model.PostModel
+import com.example.project1.ui.components.PostCard
 import kotlinx.coroutines.launch
 import org.w3c.dom.Text
 import java.util.Calendar
@@ -735,10 +743,10 @@ fun AlertDialogs() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun Bars(){
+private fun Bars(){
     Box(modifier = Modifier
         .fillMaxSize()
-        .background(Color.Blue)
+        .background(Color.Gray)
     ){
         Row(
             modifier = Modifier
@@ -748,6 +756,7 @@ fun Bars(){
                 .padding(10.dp, 50.dp, 10.dp, 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         )
+
         {
             Icon(Icons.Filled.Menu, contentDescription = "", tint = Color.White)
             Text(
@@ -759,9 +768,55 @@ fun Bars(){
 
             )
             Icon(Icons.Filled.Settings, contentDescription = "", tint = Color.White)
+        }
+        val post = arrayOf(
+            PostModel(1, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+            PostModel(2, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+            PostModel(3, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+            PostModel(4, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+            PostModel(5, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+            PostModel(6, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+            PostModel(7, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+            PostModel(8, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+            PostModel(9, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+            PostModel(10, "TextCard","This is the card text", painterResource(R.drawable.logo))
 
+        )
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxSize()
+                .padding(10.dp, 90.dp, 10.dp, 50.dp),
+        ) {
+            //PostCard(1,  "TextCard","This is the card text", painterResource(R.drawable.logo))
+           // Posts(post)
+            PostGrid(post)
         }
 
     }
+}
 
+@Composable
+fun Posts(arrayPosts : Array<PostModel>){
+    LazyRow (
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(arrayPosts) { post ->
+            PostCard(post.id, post.title, post.body, post.image)
+        }
+
+    }
+}
+
+@Composable
+fun PostGrid(arrayPosts : Array<PostModel>){
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(minSize = 128.dp),
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        items(arrayPosts) { post ->
+            PostCard(post.id, post.title, post.body, post.image)
+        }
+
+    }
 }
