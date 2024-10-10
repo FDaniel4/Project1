@@ -66,6 +66,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -85,10 +86,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.window.core.layout.WindowHeightSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.project1.R
 import com.example.project1.data.model.MenuModel
 import com.example.project1.data.model.PostModel
 import com.example.project1.ui.components.PostCard
+import com.example.project1.ui.components.PostCardCompact
 import kotlinx.coroutines.launch
 import org.w3c.dom.Text
 import java.util.Calendar
@@ -109,6 +113,7 @@ fun ComponentScreen(navController: NavController) {
         MenuModel(10, "Snack Bars", "snack-bars", Icons.Filled.DateRange),
         MenuModel(11, "Alert Dialogs", "alert-dialogs", Icons.Filled.Menu),
         MenuModel(12, "Bars", "bars", Icons.Filled.DateRange),
+        MenuModel(12, "Adaptive", "adaptive", Icons.Filled.DateRange),
 
         )
     var component by rememberSaveable { mutableStateOf("") } //Actualiza el valor de la variable
@@ -339,6 +344,7 @@ fun ComponentScreen(navController: NavController) {
             "snack-bar" -> SnackBars()
             "alert-dialogs" -> AlertDialogs()
             "bars" -> Bars()
+            "adaptive" -> Adaptive()
             //rutas para las demás pantallas
         }
     }
@@ -797,12 +803,18 @@ private fun Bars(){
 }
 
 @Composable
-fun Posts(arrayPosts : Array<PostModel>){
-    LazyRow (
+fun Posts(arrayPosts : Array<PostModel>, adaptive: String){
+    LazyColumn (
         modifier = Modifier.fillMaxSize()
     ) {
         items(arrayPosts) { post ->
-            PostCard(post.id, post.title, post.body, post.image)
+            when(adaptive){
+                "PhoneP" -> PostCardCompact(post.id, post.title, post.body, post.image)
+                "PhoneL" -> PostCard(post.id, post.title, post.body, post.image)
+                "Tablet" ->
+                PostCard(post.id, post.title, post.body, post.image)
+            }
+
         }
 
     }
@@ -819,4 +831,41 @@ fun PostGrid(arrayPosts : Array<PostModel>){
         }
 
     }
+}
+@Preview(showBackground = true, device = "spec:id=reference_tablet,shape=Normal,width=1280,height=800,unit=dp,dpi=240")
+@Composable
+fun Adaptive(){
+    var WindowsSize = currentWindowAdaptiveInfo().windowSizeClass
+    var height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
+    var width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+
+    //Compact width < 60dp phone portrait
+    //Medium width >= 600dp < 840dp tablets portrait
+    //Expanded width >= 840dp < 1200dp tablets landscape
+
+    //Compact height < 480dp phone landscape
+    //Medium height >= 480dp < 900dp tablets landscape or phone portrait
+    //Expanded height >= 900dp < 1200dp tablets landscape
+
+    val post = arrayOf(
+        PostModel(1, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+        PostModel(2, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+        PostModel(3, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+        PostModel(4, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+        PostModel(5, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+        PostModel(6, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+        PostModel(7, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+        PostModel(8, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+        PostModel(9, "TextCard","This is the card text", painterResource(R.drawable.logo)),
+        PostModel(10, "TextCard","This is the card text", painterResource(R.drawable.logo))
+
+    )
+    if(width == WindowWidthSizeClass.COMPACT){
+        Posts(post, "PhoneP" )
+    }else if(height == WindowHeightSizeClass.COMPACT){
+        Posts(post, "PhoneL")
+    }else{
+        Posts(post, "Tablet")
+    }
+    Text(text = WindowsSize.toString())
 }
