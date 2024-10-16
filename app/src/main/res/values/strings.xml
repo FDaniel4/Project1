@@ -2,4 +2,7 @@
     <string name="app_name">Project1</string>
     <string name="Hello_World_text">Hello, World!</string>
     <string name="Text_Card">Este es un texto de ejemplo para la tarjeta.</string>
+    <string name="Lorem">Lorem ip</string>
+    <string name="hello_world_text">Hello world</string>
+    <string name="text_card">Lorem ipsum</string>
 </resources>
