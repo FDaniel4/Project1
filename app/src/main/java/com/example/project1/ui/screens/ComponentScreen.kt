@@ -1,20 +1,16 @@
 package com.example.project1.ui.screens
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
-import android.widget.Button
-import android.widget.DatePicker
-import android.widget.TimePicker
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -43,22 +39,27 @@ import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.SnackbarHost
@@ -66,8 +67,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimeInput
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -79,6 +83,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -86,6 +91,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.project1.R
@@ -95,7 +101,10 @@ import com.example.project1.ui.components.PostCard
 import com.example.project1.ui.components.PostCardCompact
 import kotlinx.coroutines.launch
 import org.w3c.dom.Text
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 
 @Composable
@@ -110,7 +119,7 @@ fun ComponentScreen(navController: NavController) {
         MenuModel(7, "Badges", "Badges", Icons.Filled.Menu),
         MenuModel(8, "Date Picker", "date-pickers", Icons.Filled.DateRange),
         MenuModel(9, "Time Pickers", "time-pickers", Icons.Filled.Menu),
-        MenuModel(10, "Snack Bars", "snack-bars", Icons.Filled.DateRange),
+        MenuModel(10, "Snack Bars", "snack-bar", Icons.Filled.DateRange),
         MenuModel(11, "Alert Dialogs", "alert-dialogs", Icons.Filled.Menu),
         MenuModel(12, "Bars", "bars", Icons.Filled.DateRange),
         MenuModel(12, "Adaptive", "adaptive", Icons.Filled.DateRange),
@@ -144,185 +153,6 @@ fun ComponentScreen(navController: NavController) {
                         )
                     }
                 }
-
-//                NavigationDrawerItem(
-//                    label = { item.title },
-//                    selected = false,
-//                    onClick = {
-//                        component = item.option
-//                        scope.launch {
-//                            drawerSate.apply {
-//                                close()
-//                            }
-//                        }
-//                    }
-//                )
-                //Content2
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Content 2") },
-//                    selected = false,
-//                    onClick = {
-//                        component = "Content 2"
-//                        scope.launch {
-//                            drawerSate.apply {
-//                                close()
-//                            }
-//                        }
-//                    }
-//                )
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Buttons") },
-//                    selected = false,
-//                    onClick = {
-//                        component = "Buttons"
-//                        scope.launch {
-//                            drawerSate.apply {
-//                                close()
-//                            }
-//                        }
-//                    }
-//                )
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Floating Buttons") },
-//                    selected = false,
-//                    onClick = {
-//                        component = "FloatingButtons"
-//                        scope.launch {
-//                            drawerSate.apply {
-//                                close()
-//                            }
-//                        }
-//                    }
-//                )
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Chips") },
-//                    selected = false,
-//                    onClick = {
-//                        component = "Chips"
-//                        scope.launch {
-//                            drawerSate.apply {
-//                                close()
-//                            }
-//                        }
-//                    }
-//                )
-//
-//                //Progress
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Progress") },
-//                    selected = false,
-//                    onClick = {
-//                        component = "Progress"
-//                        scope.launch {
-//                            drawerSate.apply {
-//                                close()
-//                            }
-//                        }
-//                    }
-//                )
-//                //Sliders
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Sliders") },
-//                    selected = false,
-//                    onClick = {
-//                        component = "Sliders"
-//                        scope.launch {
-//                            drawerSate.apply {
-//                                close()
-//                            }
-//                        }
-//                    }
-//                )
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Switches") },
-//                    selected = false,
-//                    onClick = {
-//                        component = "Switches"
-//                        scope.launch {
-//                            drawerSate.apply {
-//                                close()
-//                            }
-//                        }
-//                    }
-//                )
-//
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Badges") },
-//                    selected = false,
-//                    onClick = {
-//                        component = "Badges"
-//                        scope.launch {
-//                            drawerSate.apply {
-//                                close()
-//                            }
-//                        }
-//                    }
-//                )
-//
-//                NavigationDrawerItem(
-//                    label = { Text(text = "DatePickers") },
-//                    selected = false,
-//                    onClick = {
-//                        component = "date-pickers"
-//                        scope.launch {
-//                            drawerSate.apply {
-//                                close()
-//                            }
-//                        }
-//                    }
-//                )
-//
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Badges") },
-//                    selected = false,
-//                    onClick = {
-//                        component = "Badges"
-//                        scope.launch {
-//                            drawerSate.apply {
-//                                close()
-//                            }
-//                        }
-//                    }
-//                )
-//
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Snack Bar") },
-//                    selected = false,
-//                    onClick = {
-//                        component = "snack-bar"
-//                        scope.launch {
-//                            drawerSate.apply {
-//                                close()
-//                            }
-//                        }
-//                    }
-//                )
-//
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Alert Dialogs") },
-//                    selected = false,
-//                    onClick = {
-//                        component = "alert-dialogs"
-//                        scope.launch {
-//                            drawerSate.apply {
-//                                close()
-//                            }
-//                        }
-//                    }
-//                )
-//
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Bars") },
-//                    selected = false,
-//                    onClick = {
-//                        component = "bars"
-//                        scope.launch {
-//                            drawerSate.apply {
-//                                close()
-//                            }
-//                        }
-//                    }
-//                )
             }
         }
     ) {
@@ -339,8 +169,15 @@ fun ComponentScreen(navController: NavController) {
             "Sliders" -> Sliders()
             "Switches" -> Switches()
             "Badges" -> Badges()
-//            "date-pickers" -> DatePickers()
-//            "time-pickers" -> TimePickers()
+            "date-pickers" -> DatePickers()
+            "time-pickers" -> {
+                TimePickers(onConfirm = { hour, minute ->
+                    println("Tiempo seleccionado: $hour:$minute")
+                },
+                    onDismiss = {
+                        println("TimePicker descartado")
+                    })
+            }
             "snack-bar" -> SnackBars()
             "alert-dialogs" -> AlertDialogs()
             "bars" -> Bars()
@@ -415,6 +252,7 @@ fun FloatingButtons() {
     }
 }
 
+@Preview(showBackground = true)
 @Composable
 fun Chips() {
     Column (
@@ -453,6 +291,7 @@ fun Chips() {
     }
 }
 
+
 @Composable
 fun InputChipsExample(
     text: String,
@@ -486,6 +325,7 @@ fun InputChipsExample(
     )
 }
 
+@Preview(showBackground = true)
 @Composable
 fun Progress() {
     Column(
@@ -609,74 +449,93 @@ fun Badges(){
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 //@Preview(showBackground = true)
-//@Composable
-//fun DatePickers() {
-//    var showTimePicker by remember { mutableStateOf(false) }
-//    val state = rememberTimePickerState()
-//    val formatter = remember { SimpleDateFormat("hh:mm a", Locale.getDefault()) }
-//    val snackState = remember { SnackbarHostState() }
-//    val snackScope = rememberCoroutineScope()
-//
-//    Box(propagateMinConstraints = false) {
-//        Button(modifier = Modifier.align(Alignment.Center), onClick = { showTimePicker = true }) {
-//            Text("Set Time")
-//        }
-//        SnackbarHost(hostState = snackState)
-//    }
-//
-//    if (showTimePicker) {
-//        TimePickerDialog(
-//            onCancel = { showTimePicker = false },
-//            onConfirm = {
-//                val cal = Calendar.getInstance()
-//                cal.set(Calendar.HOUR_OF_DAY, state.hour)
-//                cal.set(Calendar.MINUTE, state.minute)
-//                cal.isLenient = false
-//                snackScope.launch {
-//                    snackState.showSnackbar("Entered time: ${formatter.format(cal.time)}")
-//                }
-//                showTimePicker = false
-//            },
-//        ) {
-//            TimeInput(state = state)
-//        }
-//    }
-//}
-//
+@Composable
+fun TimePickers(
+    onConfirm: (hour: Int, minute: Int) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val currentTime = Calendar.getInstance()
+
+    val timePickerState = rememberTimePickerState(
+        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
+        initialMinute = currentTime.get(Calendar.MINUTE),
+        is24Hour = true,
+    )
+
+    Column {
+        TimeInput(
+            state = timePickerState,
+        )
+        Button(onClick = onDismiss) {
+            Text("Quitar")
+        }
+        Button(onClick = { onConfirm(timePickerState.hour, timePickerState.minute) }) {
+            Text("Confirmar")
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 //@Preview(showBackground = true)
-//@Composable
-//fun TimePickers() {
-//    var selectedTime by remember { mutableStateOf("") }
-//
-//    val calendar = Calendar.getInstance()
-//    val hour = calendar.get(Calendar.HOUR_OF_DAY)
-//    val minute = calendar.get(Calendar.MINUTE)
-//
-//    // TimePickerDialog creation
-//    val timePickerDialog = TimePickerDialog(
-//        LocalContext.current,
-//        { _: TimePicker, selectedHour: Int, selectedMinute: Int ->
-//            selectedTime = "$selectedHour:${if (selectedMinute < 10) "0$selectedMinute" else selectedMinute}"
-//        }, hour, minute, true
-//    )
-//
-//    Column(
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center,
-//        modifier = Modifier.fillMaxSize().padding(16.dp)
-//    ) {
-//        Text(text = "Selected Time: $selectedTime")
-//
-//        Spacer(modifier = Modifier.height(16.dp))
-//
-//        Button(onClick = {
-//            timePickerDialog.show()
-//        }) {
-//            Text(text = "Select Time")
-//        }
-//    }
-//}
+@Composable
+fun DatePickers() {
+    var showDatePicker by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState()
+    val selectedDate = datePickerState.selectedDateMillis?.let {
+        convertMillisToDate(it)
+    } ?: ""
+
+    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        OutlinedTextField(
+            value = selectedDate,
+            onValueChange = { },
+            label = { Text("DOB") },
+            readOnly = true,
+            trailingIcon = {
+                IconButton(onClick = { showDatePicker = !showDatePicker }) {
+                    Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = "Select date"
+                    )
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
+        )
+
+        if (showDatePicker) {
+            Popup(
+                onDismissRequest = { showDatePicker = false },
+                alignment = Alignment.TopStart
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .offset(y = 64.dp)
+                        .shadow(elevation = 4.dp)
+                        .background(MaterialTheme.colorScheme.surface)
+                        .padding(16.dp)
+                ) {
+                    DatePicker(
+                        state = datePickerState,
+                        showModeToggle = false
+                    )
+                }
+            }
+        }
+    }
+
+}
+
+fun convertMillisToDate(millis: Long): String {
+    val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+    return formatter.format(Date(millis))
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -762,7 +621,6 @@ private fun Bars(){
                 .padding(10.dp, 50.dp, 10.dp, 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         )
-
         {
             Icon(Icons.Filled.Menu, contentDescription = "", tint = Color.White)
             Text(
