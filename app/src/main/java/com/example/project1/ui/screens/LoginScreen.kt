@@ -28,6 +28,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import org.jetbrains.annotations.Async
 import coil.compose.AsyncImage
 
@@ -45,6 +46,7 @@ fun LoginScreen(navController: NavController) {
 
     }
 }
+
 
 @Composable
 fun LoginForm(navController: NavController){
@@ -64,11 +66,11 @@ fun LoginForm(navController: NavController){
             modifier = Modifier
                 .padding(20.dp)
         ) {
-//            AsyncImage(
-//                model  = "https://clipartcraft.com/images/transparent-logo-vector-8.png",
-//                contentDescription = "Starbuck Logo",
-//                contentScale = ContentScale.Fit
-//            )
+            AsyncImage(
+                model  = "https://logos-world.net/wp-content/uploads/2020/11/GitHub-Emblem.png",
+                contentDescription = "Github Logo",
+                contentScale = ContentScale.Fit
+            )
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -106,3 +108,9 @@ fun LoginForm(navController: NavController){
 
     }
 }
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenPreview() {
+    LoginScreen(navController = rememberNavController())
+}
+
