@@ -5,6 +5,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -12,6 +13,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -23,6 +25,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.work.BackoffPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.project1.ui.background.CustomWorker
 import com.example.project1.ui.camera.CameraScreen
 import com.example.project1.ui.contacts.ContactScreen
 import com.example.project1.ui.location.viewModel.SearchViewModel
@@ -33,6 +39,7 @@ import com.example.project1.ui.screens.ComponentScreen
 import com.example.project1.ui.screens.HomeScreen
 import com.example.project1.ui.screens.LoginScreen
 import com.example.project1.ui.screens.MenuScreen
+import java.time.Duration
 
 class MainActivity : ComponentActivity() {
     //Internet
@@ -40,9 +47,21 @@ class MainActivity : ComponentActivity() {
     private lateinit var wifiManager: WifiManager  // Para gestionar el Wi-Fi
     private lateinit var connectivityManager: ConnectivityManager  // Para gestionar las conexiones de red
     private lateinit var networkMonitor: NetworkMonitor  // Clase que monitorea el estado de la red
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        //WorkManager
+
+        val workRequest = OneTimeWorkRequestBuilder<CustomWorker>()
+            .setInitialDelay(Duration.ofSeconds(10))
+            .setBackoffCriteria(
+                backoffPolicy = BackoffPolicy.LINEAR,
+                duration = Duration.ofSeconds(15)
+            )
+            .build()
+        WorkManager.getInstance(applicationContext).enqueue(workRequest)
 
         //Internet
         // Obtenemos los servicios necesarios para controlar Wi-Fi y la conectividad de red
