@@ -1,7 +1,7 @@
 package com.example.project1
 
-import android.Manifest
 //import androidx.navigation.compose.NavHostController
+import android.Manifest
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
@@ -11,6 +11,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -20,6 +21,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.project1.ui.biometrics.BiometricsScreen
 import com.example.project1.ui.camera.CameraScreen
 import com.example.project1.ui.contacts.ContactScreen
 import com.example.project1.ui.network.NetworkMonitor
@@ -28,7 +30,7 @@ import com.example.project1.ui.screens.HomeScreen
 import com.example.project1.ui.screens.LoginScreen
 import com.example.project1.ui.screens.MenuScreen
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     //Internet
     // Inicializamos los objetos que vamos a usar para el monitoreo de la red
     private lateinit var wifiManager: WifiManager  // Para gestionar el Wi-Fi
@@ -46,7 +48,7 @@ class MainActivity : ComponentActivity() {
         // Creamos una instancia de NetworkMonitor, pasando los servicios y la actividad actual
         networkMonitor = NetworkMonitor(wifiManager, connectivityManager, this)
         setContent {
-            ComposeMultiScreenApp(networkMonitor)
+            ComposeMultiScreenApp(this,networkMonitor)
 
 
 //            Column(
@@ -397,15 +399,15 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun ComposeMultiScreenApp(networkMonitor: NetworkMonitor){
+fun ComposeMultiScreenApp( activity: AppCompatActivity,networkMonitor: NetworkMonitor){
     val navController = rememberNavController()
     Surface (color = Color.White) {
-        SetupNavGraph(navController = navController,networkMonitor)
+        SetupNavGraph(navController=navController,activity,networkMonitor)
     }
 }
 
 @Composable
-fun SetupNavGraph (navController: NavHostController, networkMonitor: NetworkMonitor){
+fun SetupNavGraph(navController: NavHostController,activity: AppCompatActivity,networkMonitor: NetworkMonitor){
     val context = LocalContext.current
     NavHost(navController = navController, startDestination = "menu"){
         composable("menu"){ MenuScreen(navController) }
@@ -416,6 +418,9 @@ fun SetupNavGraph (navController: NavHostController, networkMonitor: NetworkMoni
         composable("internet"){networkMonitor.NetworkMonitorScreen(navController)}
 
         composable("contacts"){ ContactScreen(navController = navController) }
+
+        //Biometricos
+        composable("biometrics"){ BiometricsScreen(navController = navController, activity = activity)}
 
     }
 }
