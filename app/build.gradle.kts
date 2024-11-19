@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
 
+
 }
 
 android {
@@ -104,6 +105,8 @@ dependencies {
     // ---------------------------------
     // Biometrics
     implementation("androidx.biometric:biometric:1.1.0")
+    implementation("androidx.asynclayoutinflater:asynclayoutinflater-appcompat:1.1.0-alpha01")
+
     //----------------------------------
 
     //Camera and files

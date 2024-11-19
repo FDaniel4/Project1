@@ -11,26 +11,30 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.project1.ui.biometrics.BiometricsScreen
+import androidx.navigation.navArgument
 import com.example.project1.ui.camera.CameraScreen
 import com.example.project1.ui.contacts.ContactScreen
+import com.example.project1.ui.location.viewModel.SearchViewModel
+import com.example.project1.ui.location.views.HomeView
+import com.example.project1.ui.location.views.MapsSearchView
 import com.example.project1.ui.network.NetworkMonitor
 import com.example.project1.ui.screens.ComponentScreen
 import com.example.project1.ui.screens.HomeScreen
 import com.example.project1.ui.screens.LoginScreen
 import com.example.project1.ui.screens.MenuScreen
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
     //Internet
     // Inicializamos los objetos que vamos a usar para el monitoreo de la red
     private lateinit var wifiManager: WifiManager  // Para gestionar el Wi-Fi
@@ -48,7 +52,8 @@ class MainActivity : AppCompatActivity() {
         // Creamos una instancia de NetworkMonitor, pasando los servicios y la actividad actual
         networkMonitor = NetworkMonitor(wifiManager, connectivityManager, this)
         setContent {
-            ComposeMultiScreenApp(this,networkMonitor)
+            val viewModel: SearchViewModel by viewModels()
+            ComposeMultiScreenApp(searchVM = viewModel,this,networkMonitor)
 
 
 //            Column(
@@ -399,15 +404,15 @@ class MainActivity : AppCompatActivity() {
 
 
 @Composable
-fun ComposeMultiScreenApp( activity: AppCompatActivity,networkMonitor: NetworkMonitor){
+fun ComposeMultiScreenApp(searchVM: SearchViewModel, activity: MainActivity, networkMonitor: NetworkMonitor){
     val navController = rememberNavController()
     Surface (color = Color.White) {
-        SetupNavGraph(navController=navController,activity,networkMonitor)
+        SetupNavGraph(navController =navController,searchVM,activity,networkMonitor)
     }
 }
 
 @Composable
-fun SetupNavGraph(navController: NavHostController,activity: AppCompatActivity,networkMonitor: NetworkMonitor){
+fun SetupNavGraph(navController: NavHostController, searchVM: SearchViewModel, activity: MainActivity, networkMonitor: NetworkMonitor){
     val context = LocalContext.current
     NavHost(navController = navController, startDestination = "menu"){
         composable("menu"){ MenuScreen(navController) }
@@ -420,7 +425,20 @@ fun SetupNavGraph(navController: NavHostController,activity: AppCompatActivity,n
         composable("contacts"){ ContactScreen(navController = navController) }
 
         //Biometricos
-        composable("biometrics"){ BiometricsScreen(navController = navController, activity = activity)}
+        //composable("biometrics"){ BiometricsScreen(navController = navController, activity = activity)}
 
+        // Ruta para `MapsSearchView` que recibe latitud, longitud y dirección como argumentos
+        composable("homeMaps"){ HomeView(navController = navController, searchVM = searchVM)}
+        composable("MapsSearchView/{lat}/{long}/{address}", arguments = listOf(
+            navArgument("lat") { type = NavType.FloatType },
+            navArgument("long") { type = NavType.FloatType },
+            navArgument("address") { type = NavType.StringType }
+        )) {
+            // Obtención de los argumentos con valores predeterminados en caso de que falten
+            val lat = it.arguments?.getFloat("lat") ?: 0.0
+            val long = it.arguments?.getFloat("long") ?: 0.0
+            val address = it.arguments?.getString("address") ?: ""
+            MapsSearchView(lat.toDouble(), long.toDouble(), address )
+        }
     }
 }
