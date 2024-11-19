@@ -1,5 +1,6 @@
 package com.example.project1
 
+//import androidx.navigation.compose.NavHostController
 import android.graphics.fonts.FontStyle
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Cyan
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,8 +38,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-//import androidx.navigation.compose.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.project1.ui.camera.CameraScreen
 import com.example.project1.ui.screens.ComponentScreen
 import com.example.project1.ui.screens.HomeScreen
 import com.example.project1.ui.screens.LoginScreen
@@ -380,11 +382,13 @@ fun ComposeMultiScreenApp(){
 
 @Composable
 fun SetupNavGraph (navController: NavHostController){
+    val context = LocalContext.current
     NavHost(navController = navController, startDestination = "menu"){
         composable("menu"){ MenuScreen(navController) }
         composable("home"){ HomeScreen(navController) }
         composable("components"){ ComponentScreen(navController) }
         composable("login"){ LoginScreen(navController = navController)}
+        composable("Camera"){ CameraScreen(context = context,navController)}
 
     }
 }
