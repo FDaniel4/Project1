@@ -1,58 +1,51 @@
 package com.example.project1
 
+import android.Manifest
 //import androidx.navigation.compose.NavHostController
-import android.graphics.fonts.FontStyle
+import android.content.pm.PackageManager
+import android.net.ConnectivityManager
+import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Blue
-import androidx.compose.ui.graphics.Color.Companion.Cyan
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.project1.ui.camera.CameraScreen
+import com.example.project1.ui.network.NetworkMonitor
 import com.example.project1.ui.screens.ComponentScreen
 import com.example.project1.ui.screens.HomeScreen
 import com.example.project1.ui.screens.LoginScreen
 import com.example.project1.ui.screens.MenuScreen
-import com.example.project1.ui.theme.Project1Theme
-import java.lang.reflect.Modifier
 
 class MainActivity : ComponentActivity() {
+    //Internet
+    // Inicializamos los objetos que vamos a usar para el monitoreo de la red
+    private lateinit var wifiManager: WifiManager  // Para gestionar el Wi-Fi
+    private lateinit var connectivityManager: ConnectivityManager  // Para gestionar las conexiones de red
+    private lateinit var networkMonitor: NetworkMonitor  // Clase que monitorea el estado de la red
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        //Internet
+        // Obtenemos los servicios necesarios para controlar Wi-Fi y la conectividad de red
+        wifiManager = getSystemService(WIFI_SERVICE) as WifiManager
+        connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        // Creamos una instancia de NetworkMonitor, pasando los servicios y la actividad actual
+        networkMonitor = NetworkMonitor(wifiManager, connectivityManager, this)
         setContent {
-            ComposeMultiScreenApp()
+            ComposeMultiScreenApp(networkMonitor)
 
 
 //            Column(
@@ -105,6 +98,36 @@ class MainActivity : ComponentActivity() {
 //            }
         }
     }
+    //Internet
+// Función para solicitar permisos si no han sido concedidos
+    fun requestPermissionsIfNeeded() {
+        val permissions = listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,  // Permiso para la ubicación precisa
+            Manifest.permission.ACCESS_COARSE_LOCATION  // Permiso para la ubicación aproximada
+        ).filter {
+            // Verificamos si alguno de los permisos no ha sido concedido
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
+
+        // Si falta algún permiso, solicitamos los permisos necesarios
+        if (permissions.isNotEmpty()) {
+            requestPermissionsLauncher.launch(permissions.toTypedArray())
+        }
+    }
+    private val requestPermissionsLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions())
+        { permissions ->
+            // Verificamos si los permisos de ubicación fueron concedidos
+            if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+            ) {
+                // Si los permisos son concedidos, mostramos un mensaje
+                Toast.makeText(this, "Permisos necesarios concedidos", Toast.LENGTH_SHORT).show()
+            } else {
+                // Si no se conceden, mostramos un mensaje de error
+                Toast.makeText(this, "Permisos necesarios no concedidos", Toast.LENGTH_SHORT).show()
+            }
+        }
 }
 
 //@Composable
@@ -371,17 +394,17 @@ class MainActivity : ComponentActivity() {
 //}
 
 
-@Preview(showBackground = true)
+
 @Composable
-fun ComposeMultiScreenApp(){
+fun ComposeMultiScreenApp(networkMonitor: NetworkMonitor){
     val navController = rememberNavController()
     Surface (color = Color.White) {
-        SetupNavGraph(navController = navController)
+        SetupNavGraph(navController = navController,networkMonitor)
     }
 }
 
 @Composable
-fun SetupNavGraph (navController: NavHostController){
+fun SetupNavGraph (navController: NavHostController, networkMonitor: NetworkMonitor){
     val context = LocalContext.current
     NavHost(navController = navController, startDestination = "menu"){
         composable("menu"){ MenuScreen(navController) }
@@ -389,6 +412,7 @@ fun SetupNavGraph (navController: NavHostController){
         composable("components"){ ComponentScreen(navController) }
         composable("login"){ LoginScreen(navController = navController)}
         composable("Camera"){ CameraScreen(context = context,navController)}
+        composable("internet"){networkMonitor.NetworkMonitorScreen(navController)}
 
     }
 }

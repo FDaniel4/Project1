@@ -26,6 +26,9 @@ fun MenuScreen(navController: NavController){
         Button(onClick = { navController.navigate("Camera")}) {
             Text("Camera")
         }
+        Button(onClick = { navController.navigate("internet")}) {
+            Text("Internet")
+        }
     }
 }
 
