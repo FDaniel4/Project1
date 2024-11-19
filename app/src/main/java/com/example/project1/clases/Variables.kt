@@ -10,7 +10,7 @@ fun main() {
 
     //Variables string
     val gender:Char = 'M'
-    val name:String = "Jesus Uriel Flores Zavala"
+    val name:String = "Daniel Palacio"
 
     //Boleanos
     //val isGreater:Boolean false

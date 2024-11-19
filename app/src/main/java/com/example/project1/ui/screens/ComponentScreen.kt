@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -85,7 +83,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -100,7 +97,6 @@ import com.example.project1.data.model.PostModel
 import com.example.project1.ui.components.PostCard
 import com.example.project1.ui.components.PostCardCompact
 import kotlinx.coroutines.launch
-import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -122,7 +118,7 @@ fun ComponentScreen(navController: NavController) {
         MenuModel(10, "Snack Bars", "snack-bar", Icons.Filled.DateRange),
         MenuModel(11, "Alert Dialogs", "alert-dialogs", Icons.Filled.Menu),
         MenuModel(12, "Bars", "bars", Icons.Filled.DateRange),
-        MenuModel(12, "Adaptive", "adaptive", Icons.Filled.DateRange),
+        MenuModel(13, "Adaptive", "adaptive", Icons.Filled.DateRange),
 
         )
     var component by rememberSaveable { mutableStateOf("") } //Actualiza el valor de la variable
