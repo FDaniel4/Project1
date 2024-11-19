@@ -21,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.project1.ui.camera.CameraScreen
+import com.example.project1.ui.contacts.ContactScreen
 import com.example.project1.ui.network.NetworkMonitor
 import com.example.project1.ui.screens.ComponentScreen
 import com.example.project1.ui.screens.HomeScreen
@@ -413,6 +414,8 @@ fun SetupNavGraph (navController: NavHostController, networkMonitor: NetworkMoni
         composable("login"){ LoginScreen(navController = navController)}
         composable("Camera"){ CameraScreen(context = context,navController)}
         composable("internet"){networkMonitor.NetworkMonitorScreen(navController)}
+
+        composable("contacts"){ ContactScreen(navController = navController) }
 
     }
 }
