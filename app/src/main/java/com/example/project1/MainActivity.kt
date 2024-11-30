@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,6 +29,8 @@ import androidx.navigation.navArgument
 import androidx.work.BackoffPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.example.project1.data.database.AppDatabase
+import com.example.project1.data.database.DatabaseProvider
 import com.example.project1.ui.background.CustomWorker
 import com.example.project1.ui.camera.CameraScreen
 import com.example.project1.ui.contacts.ContactScreen
@@ -38,6 +41,7 @@ import com.example.project1.ui.network.NetworkMonitor
 import com.example.project1.ui.screens.ComponentScreen
 import com.example.project1.ui.screens.HomeScreen
 import com.example.project1.ui.screens.LoginScreen
+import com.example.project1.ui.screens.ManageServiceScreen
 import com.example.project1.ui.screens.MenuScreen
 import java.time.Duration
 
@@ -47,9 +51,24 @@ class MainActivity : ComponentActivity() {
     private lateinit var wifiManager: WifiManager  // Para gestionar el Wi-Fi
     private lateinit var connectivityManager: ConnectivityManager  // Para gestionar las conexiones de red
     private lateinit var networkMonitor: NetworkMonitor  // Clase que monitorea el estado de la red
+
+    //para la base de datos
+    lateinit var database: AppDatabase
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //create or load DB
+        try {
+            database = DatabaseProvider.getDatabase(this)
+            Log.d("DB","Database created")
+        }catch (e: Exception){
+            Log.d("DB","ERROR: $e")
+        }
+
+
+
         enableEdgeToEdge()
 
         //WorkManager
@@ -437,7 +456,12 @@ fun SetupNavGraph(navController: NavHostController, searchVM: SearchViewModel, a
         composable("menu"){ MenuScreen(navController) }
         composable("home"){ HomeScreen(navController) }
         composable("components"){ ComponentScreen(navController) }
-        composable("login"){ LoginScreen(navController = navController)}
+        composable("login"){ LoginScreen(navController)}
+        composable("manage-service/{serviceId}"){backStackEntry ->
+            val serviceId = backStackEntry.arguments?.getString("serviceId")
+            ManageServiceScreen(navController, serviceId = serviceId)
+
+        }
         composable("Camera"){ CameraScreen(context = context,navController)}
         composable("internet"){networkMonitor.NetworkMonitorScreen(navController)}
 

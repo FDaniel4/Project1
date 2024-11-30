@@ -84,7 +84,6 @@ fun LoginForm(navController: NavController){
                 label = { Text("User") }
             )
 
-
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth(),

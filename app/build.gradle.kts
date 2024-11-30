@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.devtools.ksp")
 
 
 }
@@ -64,6 +65,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.adaptive.android)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
     //implementation(libs.androidx.navigation.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -72,21 +75,20 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("io.coil-kt:coil-compose:2.4.0")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.11.0")
-    implementation("io.coil-kt:coil-compose:2.4.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.coil.kt.coil.compose)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.converter.gson)
 
     //
     //-----------------------
     // Work Manager
     implementation("androidx.work:work-runtime:2.9.0")
     //Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
     //Dagger-hilt
     implementation("com.google.dagger:hilt-android:2.44.2")
     implementation("androidx.hilt:hilt-work:1.2.0")
@@ -105,13 +107,13 @@ dependencies {
     // ---------------------------------
     // Biometrics
     implementation("androidx.biometric:biometric:1.1.0")
-    implementation("androidx.asynclayoutinflater:asynclayoutinflater-appcompat:1.1.0-alpha01")
+    implementation(libs.androidx.asynclayoutinflater.appcompat)
 
     //----------------------------------
 
     //Camera and files
     //implementation("io.coil-kt:coil-compose:2.0.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation(libs.androidx.lifecycle.viewmodel.compose.v287)
 
     //INTERNET
     ////////////////////////////////////////////////
@@ -121,4 +123,12 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.9.3")
     debugImplementation("androidx.compose.ui:ui-tooling:1.7.5")
     //implementation("io.coil-kt:coil-compose:2.4.0")
+
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+
+    //SQLite
+    val room_version = "2.6.1"
+    ksp("androidx.room:room-compiler:$room_version")
 }
