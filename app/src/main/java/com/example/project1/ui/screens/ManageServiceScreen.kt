@@ -39,12 +39,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.project1.data.model.toServiceEntity
 
 @Composable
 fun ManageServiceScreen(
     navController: NavController,
-    serviceId: String?, viewModel:
-    ServiceViewModel = viewModel()
+    serviceId: String?,
+    viewModel: ServiceViewModel = viewModel()
 ) {
     //
     val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
@@ -174,7 +175,7 @@ fun ManageServiceScreen(
                         password = service.value.password,
                         description = service.value.description
                     )
-                    save(viewModel, context, serviceTemp, serviceId)
+                    save(viewModel, context, serviceTemp, serviceId, db)
                 }
             ) {
                 if(serviceId == "0") {
@@ -210,10 +211,19 @@ fun ManageServiceScreen(
     }
 }
 
-fun save(viewModel: ServiceViewModel, context: Context, service: ServiceModel, serviceId: String? )
+fun save(viewModel: ServiceViewModel, context: Context, service: ServiceModel, serviceId: String?, db: AppDatabase )
 {
     if (serviceId == "0")
     {
+        val serviceDao = db.serviceDao()
+        var lastID = -1
+
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                lastID = serviceDao.lastId()
+                service.id = lastID + 1
+                serviceDao.insert(service.toServiceEntity())
+            }
         viewModel.createService(service)
         { response ->
             if (response.isSuccessful) {
@@ -230,7 +240,17 @@ fun save(viewModel: ServiceViewModel, context: Context, service: ServiceModel, s
                 ).show()
             }
         }
+        } catch (exception: Exception) {
+            println(exception)
+        }
     } else if (serviceId != null){
+        val serviceDao = db.serviceDao()
+
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                service.id = serviceId.toInt()
+                serviceDao.insert(service.toServiceEntity())
+            }
         viewModel.updateService(serviceId.toInt(), service)
         { response ->
             if (response.isSuccessful) {
@@ -247,33 +267,37 @@ fun save(viewModel: ServiceViewModel, context: Context, service: ServiceModel, s
                 ).show()
             }
         }
+        } catch (exception: Exception) {
+            println(exception)
+        }
     }
 }
 fun delete(viewModel: ServiceViewModel, context: Context, serviceId: String?, navController: NavController, serviceDao: ServiceDao)
 {
     if (serviceId != null && serviceId != "0") {
-        viewModel.deleteService(serviceId.toInt())
-        { response ->
-            if (response.isSuccessful) {
-                //
-                CoroutineScope(Dispatchers.IO).launch {
-                    val service = serviceDao.show(serviceId.toInt())
-                    serviceDao.delete(service)
-                }
-                //
-                Toast.makeText(
-                    context,
-                    "Service deleted successfully",
-                    Toast.LENGTH_SHORT
-                ).show()
-                navController.popBackStack()
-            } else {
-                Toast.makeText(
-                    context,
-                    "Failed to delete service",
-                    Toast.LENGTH_SHORT
-                ).show()
+        try{
+            CoroutineScope(Dispatchers.IO).launch {
+                val service = serviceDao.show(serviceId.toInt())
+                serviceDao.delete(service)
             }
+            viewModel.deleteService(serviceId.toInt()) { response ->
+                if (response.isSuccessful) {
+                    Toast.makeText(
+                        context,
+                        "Service deleted successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    navController.popBackStack()
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Failed to delete service",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        } catch (exception: Exception) {
+            println(exception)
         }
     }
 }

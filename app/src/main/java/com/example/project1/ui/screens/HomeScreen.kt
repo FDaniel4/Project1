@@ -41,7 +41,9 @@ import com.example.project1.data.model.ServiceModel
 import com.example.project1.ui.components.ServiceCard
 import com.example.project1.ui.components.ServiceDetailCard
 import com.example.project1.ui.components.TopBar
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +53,7 @@ fun HomeScreen(navController: NavController, viewModel: ServiceViewModel=android
 
     val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
 
-    var serviceDetail by remember { mutableStateOf<ServiceModel?>(null) }
+    var serviceDetail by remember { mutableStateOf<ServiceEntity?>(null) }
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false,
     )
@@ -105,10 +107,9 @@ fun HomeScreen(navController: NavController, viewModel: ServiceViewModel=android
             items(services) { service ->
                 ServiceCard(service.id, service.name, service.username, service.imageURL,
                     onButtonClick = {
-                        viewModel.showService(service.id) { response ->
-                            if (response.isSuccessful) {
-                                serviceDetail = response.body()
-                            }
+                        CoroutineScope(Dispatchers.IO).launch {
+                            serviceDetail = serviceDao.show(service.id.toInt())
+
                         }
                         showBottomSheet = true
                     }
